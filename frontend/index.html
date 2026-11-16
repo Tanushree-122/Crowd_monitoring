@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VISORA — Crowd Intelligence</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">V</span>
+      <span class="brand-text">VISORA<span class="brand-period">.</span></span>
+    </div>
+    <div class="sidebar-caption">WORKSPACE</div>
+    <nav class="nav">
+      <a href="#" class="nav-item active" data-section="dashboard">
+        <span class="nav-icon" aria-hidden="true">▦</span> Dashboard
+      </a>
+      <a href="#" class="nav-item" data-section="surveillance">
+        <span class="nav-icon" aria-hidden="true">◉</span> Live Surveillance
+      </a>
+      <a href="#" class="nav-item" data-section="analytics">
+        <span class="nav-icon" aria-hidden="true">⌁</span> Analytics
+      </a>
+      <a href="#" class="nav-item" data-section="alerts">
+        <span class="nav-icon" aria-hidden="true">△</span> Alerts
+      </a>
+      <a href="#" class="nav-item" data-section="settings">
+        <span class="nav-icon" aria-hidden="true">⚙︎</span> System Info
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="model-chip">
+        <span class="dot dot-model"></span>
+        <span><strong>CSRNet Engine</strong><small>LOCAL INFERENCE</small></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- HEADER -->
+    <header class="topbar" id="dashboard">
+      <div class="topbar-title">
+        <div class="eyebrow"><span class="eyebrow-line"></span> AI CROWD INTELLIGENCE</div>
+        <h1>See the crowd.<br><span>Understand the moment.</span></h1>
+        <p class="subtitle">Video-based crowd analysis, powered by CSRNet.</p>
+      </div>
+      <div class="topbar-right">
+        <div class="system-status" id="systemStatus">
+          <span class="dot dot-idle" id="statusDot"></span>
+          <span id="statusText">System Idle</span>
+        </div>
+        <div class="datetime" id="datetime">--</div>
+      </div>
+    </header>
+
+    <!-- STAT CARDS -->
+    <section class="stats-grid" id="statsGrid">
+      <div class="stat-card stat-card--current">
+        <div class="stat-card-top"><div class="stat-label">Current Crowd</div><span class="stat-index">01</span></div>
+        <div class="stat-value" id="statCurrent">0</div>
+        <div class="stat-unit">people detected</div>
+      </div>
+      <div class="stat-card stat-card--peak">
+        <div class="stat-card-top"><div class="stat-label">Peak Crowd</div><span class="stat-index">02</span></div>
+        <div class="stat-value" id="statPeak">0</div>
+        <div class="stat-unit">max observed</div>
+      </div>
+      <div class="stat-card stat-card--average">
+        <div class="stat-card-top"><div class="stat-label">Average Crowd</div><span class="stat-index">03</span></div>
+        <div class="stat-value" id="statAverage">0</div>
+        <div class="stat-unit">mean across frames</div>
+      </div>
+      <div class="stat-card stat-card--density">
+        <div class="stat-card-top"><div class="stat-label">Crowd Density</div><span class="stat-index">04</span></div>
+        <div class="stat-value stat-value--tag" id="statDensity">—</div>
+        <div class="stat-unit">threshold classification</div>
+      </div>
+      <div class="stat-card stat-card--safety">
+        <div class="stat-card-top"><div class="stat-label">Safety Status</div><span class="stat-index">05</span></div>
+        <div class="stat-value stat-value--tag" id="statSafety">—</div>
+        <div class="stat-unit">derived alert level</div>
+      </div>
+    </section>
+
+    <div class="grid-2col">
+
+      <!-- LEFT COLUMN -->
+      <div class="col">
+
+        <!-- UPLOAD / SURVEILLANCE FEED -->
+        <section class="panel" id="surveillance">
+          <div class="panel-header">
+            <div><div class="panel-kicker">01 / INPUT</div><h2>Surveillance Feed</h2></div>
+            <span class="panel-tag" id="processingStatusTag">No video loaded</span>
+          </div>
+
+          <div class="upload-zone" id="uploadZone">
+            <input
+              type="file"
+              id="videoInput"
+              accept="video/mp4,video/x-msvideo,video/quicktime,video/x-matroska,video/webm"
+              hidden
+            >
+            <label for="videoInput" id="uploadPrompt" class="upload-prompt">
+              <span class="upload-icon" aria-hidden="true">↑</span>
+              <p class="upload-title">Choose a video to begin</p>
+              <p class="upload-action">or <span>browse files</span></p>
+              <p class="upload-hint">
+                MP4, AVI, MOV, MKV, WEBM — up to 200MB
+              </p>
+            </label>
+            <video id="videoPreview" class="video-preview" controls hidden></video>
+          </div>
+
+          <div class="file-meta" id="fileMeta" hidden>
+            <span id="fileName">—</span>
+          </div>
+
+          <div class="controls">
+            <button id="startBtn" class="btn btn-primary" disabled>▶ Start Analysis</button>
+            <button id="resetBtn" class="btn btn-ghost">■ Reset</button>
+          </div>
+
+          <div class="progress-wrap" id="progressWrap" hidden>
+            <div class="progress-label">
+              <span id="progressLabel">Processing frames…</span>
+              <span id="progressPct">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MONITORING INFO -->
+        <section class="panel" id="settings">
+          <div class="panel-header"><div><div class="panel-kicker">02 / SESSION</div><h2>Monitoring Information</h2></div></div>
+          <table class="info-table">
+            <tbody>
+              <tr><td>Video Name</td><td id="infoVideoName">—</td></tr>
+              <tr><td>Video Duration</td><td id="infoDuration">—</td></tr>
+              <tr><td>Frames Processed</td><td id="infoFrames">—</td></tr>
+              <tr><td>Processing FPS</td><td id="infoFps">—</td></tr>
+              <tr><td>Model Used</td><td id="infoModel">CSRNet</td></tr>
+              <tr><td>Analysis Status</td><td id="infoStatus">Idle</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col">
+
+        <!-- CSRNET ANALYSIS -->
+        <section class="panel" id="densityAnalysis">
+          <div class="panel-header"><div><div class="panel-kicker">03 / COMPUTER VISION</div><h2>Density Map</h2></div><span class="panel-indicator"><span class="dot dot-model"></span> CSRNet</span></div>
+          <div class="density-view">
+            <img id="densityMapImg" class="density-map-img" alt="Density map" hidden>
+            <div id="densityPlaceholder" class="density-placeholder">
+              <span class="density-placeholder-icon" aria-hidden="true">⌁</span>
+              <strong>Waiting for analysis</strong>
+              <span>Your crowd density visualization will appear here.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ANALYTICS CHART -->
+        <section class="panel" id="analytics">
+          <div class="panel-header"><div><div class="panel-kicker">04 / TRENDS</div><h2>Population over time</h2></div></div>
+          <canvas id="crowdChart" height="220"></canvas>
+        </section>
+
+        <!-- ALERTS -->
+        <section class="panel" id="alerts">
+          <div class="panel-header"><div><div class="panel-kicker">05 / MONITORING</div><h2>Density alerts</h2></div></div>
+          <ul class="alerts-list" id="alertsList">
+            <li class="alert-empty">No alerts yet. Run an analysis to populate this feed.</li>
+          </ul>
+        </section>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Model weights (large binary, not committed to git)
+backend/models/*.pth
+
+# Uploaded videos and generated outputs
+backend/uploads/*
+videos/*
+outputs/density_maps/*
+outputs/processed_videos/*
+!backend/uploads/.gitkeep
+!videos/.gitkeep
+!outputs/density_maps/.gitkeep
+!outputs/processed_videos/.gitkeep
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.log

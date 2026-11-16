@@ -1,0 +1,14 @@
+This folder must contain the CSRNet pretrained weight file:
+
+    csrnet.pth
+
+This project does NOT include pretrained weights (they are large binary
+files trained on specific crowd-counting datasets and cannot be fabricated
+or invented). You must download compatible weights yourself.
+
+See the main README.md, section "CSRNet Model Weight Setup", for exact
+download sources and compatibility notes.
+
+Once obtained, place the file here so the final path is:
+
+    backend/models/csrnet.pth
