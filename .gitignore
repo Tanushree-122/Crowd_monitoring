@@ -7,11 +7,11 @@ venv/
 env/
 
 # Model weights (large binary, not committed to git)
-backend/models/*.pth
+
 
 # Uploaded videos and generated outputs
 backend/uploads/*
-videos/*
+
 outputs/density_maps/*
 outputs/processed_videos/*
 !backend/uploads/.gitkeep
