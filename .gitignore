@@ -6,11 +6,13 @@ __pycache__/
 venv/
 env/
 
-# Model weights (large binary, not committed to git)
-
+# Keep only the distributable CSRNet checkpoint in Git LFS.
+backend/models/*.pth
+!backend/models/csrnet.pth
 
 # Uploaded videos and generated outputs
 backend/uploads/*
+videos/*
 
 outputs/density_maps/*
 outputs/processed_videos/*

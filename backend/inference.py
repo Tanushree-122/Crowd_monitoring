@@ -45,6 +45,11 @@ class ModelLoadError(Exception):
     pass
 
 
+class AnalysisCancelledError(Exception):
+    """Raised when the caller requests cancellation between video frames."""
+    pass
+
+
 _MODEL_CACHE = {"model": None}
 
 
@@ -133,7 +138,7 @@ def predict_frame(model: CSRNet, frame: np.ndarray):
     return count, density_map
 
 
-def process_video(video_path: str, progress_callback=None):
+def process_video(video_path: str, progress_callback=None, cancel_event=None):
     """
     Process an entire video: extract frames at config.FRAME_SAMPLE_INTERVAL,
     run CSRNet on each sampled frame, and collect per-frame counts.
@@ -143,6 +148,7 @@ def process_video(video_path: str, progress_callback=None):
         progress_callback: optional callable(processed, total_sampled, latest_result_dict)
             invoked after each sampled frame is processed, so a Flask route
             (or a background job) can report live progress.
+        cancel_event: optional threading.Event checked between video frames.
 
     Returns:
         dict with keys:
@@ -179,6 +185,9 @@ def process_video(video_path: str, progress_callback=None):
 
     try:
         while True:
+            if cancel_event is not None and cancel_event.is_set():
+                raise AnalysisCancelledError("Analysis was stopped by the user.")
+
             ret, frame = cap.read()
             if not ret:
                 break  # end of video

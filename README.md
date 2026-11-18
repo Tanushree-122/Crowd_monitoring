@@ -23,7 +23,7 @@ summary statistics, a density map, and threshold-based alerts.
 
 - Windows, macOS, or Linux
 - Python **3.11** recommended; Python **3.12.10** was also verified with the pinned dependencies
-- pip and a modern browser
+- Git, Git LFS, pip, and a modern browser
 - Approximately 2 GB of free space for the Python environment and model
 - A compatible CSRNet checkpoint for video analysis (see [Model weights](#model-weights-required-for-analysis))
 
@@ -37,9 +37,14 @@ After pushing this project to GitHub, replace the example account and
 repository below with your GitHub details:
 
 ```bash
+git lfs install
 git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git
 cd YOUR-REPOSITORY/Crowd_monitoring
+git lfs pull
 ```
+
+For an existing clone, run `git lfs install` and `git lfs pull` from the
+repository root to download the model file.
 
 If `Crowd_monitoring` is the repository root, omit `/Crowd_monitoring` from
 the `cd` command. Alternatively, download the repository ZIP from GitHub and
@@ -83,30 +88,18 @@ The pinned dependencies include Flask, OpenCV, NumPy, PyTorch, and
 TorchVision. Installing PyTorch can take a few minutes and requires a
 reliable internet connection.
 
-## Model weights (required for analysis)
+## Model weights
 
-The pretrained model is a large binary file and is excluded from Git by
-`.gitignore`. A fresh clone will **not** contain the checkpoint, even if it
-exists in the project owner's local folder. The dashboard can open without
-the weights, but analyzing a video requires a compatible checkpoint.
+The compatible CSRNet checkpoint is stored with Git LFS at
+`backend/models/csrnet.pth`. Install Git LFS before cloning so GitHub
+downloads the actual model file. If the file in an existing checkout is only
+a small text pointer, run `git lfs install` and `git lfs pull` from the
+repository root.
 
-1. Obtain a pretrained **PyTorch CSRNet** checkpoint from a trusted source.
-   It must match the CSRNet architecture in `backend/csrnet.py` (VGG16
-   frontend, dilated-convolution backend). A checkpoint for another model or
-   a structurally different CSRNet will not work.
-2. Save or rename the checkpoint to:
-
-   ```text
-   backend/models/csrnet.pth
-   ```
-
-3. Keep the checkpoint out of Git unless you have permission to redistribute
-   it and have checked GitHub's file-size limits. The repository provides
-   `backend/models/PLACE_WEIGHTS_HERE.txt` as a reminder.
-
-Check the checkpoint's license and source before using or sharing it. Model
-results are only meaningful when the weights are compatible and suitable for
-the footage. The first health check loads the model and can take some time.
+The checkpoint must match the CSRNet architecture in `backend/csrnet.py`
+(VGG16 frontend, dilated-convolution backend). The first health check loads
+the model and can take some time. Checkpoint estimates are not ground truth
+or safety-critical guidance.
 
 ## Run VISORA
 
@@ -157,8 +150,9 @@ port, update that value too. Flask CORS is enabled for local frontend access.
    "loaded"`.
 2. Open `http://127.0.0.1:8000`.
 3. Choose a supported video no larger than **200 MB**.
-4. Select **Start Analysis** and wait for the results.
-5. Use **Reset** before starting another analysis.
+4. Select **Upload & analyze** to send the video to the local backend and wait for results.
+5. Select **Stop Analysis** to request cancellation between sampled-frame inferences.
+6. Use **Reset** before starting another analysis.
 
 The backend analyzes a sampled subset of frames. By default it processes
 every 60th frame and stops after 150 sampled frames. These settings are in
@@ -200,12 +194,16 @@ python app.py
 | `POST` | `/api/upload` | Upload a video |
 | `POST` | `/api/analyze` | Analyze an uploaded video |
 | `GET` | `/api/status` | Read current processing status |
+| `POST` | `/api/stop` | Request cancellation between frame inferences |
 | `POST` | `/api/reset` | Reset in-memory analysis state |
 | `GET` | `/outputs/density_maps/<filename>` | Retrieve a generated density map |
 
 The dashboard sends the video directly to `/api/analyze` as multipart form
 data. The API also supports uploading first and then analyzing a stored
 filename. See `backend/app.py` for request and response details.
+Stopping an analysis takes effect after the current frame inference finishes.
+The dashboard's report history lasts only for the open browser session; the
+backend does not persist past analysis records.
 
 ## Troubleshooting
 

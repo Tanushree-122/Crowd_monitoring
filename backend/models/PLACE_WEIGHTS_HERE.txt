@@ -1,14 +1,7 @@
-This folder must contain the CSRNet pretrained weight file:
-
-    csrnet.pth
-
-This project does NOT include pretrained weights (they are large binary
-files trained on specific crowd-counting datasets and cannot be fabricated
-or invented). You must download compatible weights yourself.
-
-See the main README.md, section "CSRNet Model Weight Setup", for exact
-download sources and compatibility notes.
-
-Once obtained, place the file here so the final path is:
+The compatible CSRNet checkpoint is tracked with Git LFS as:
 
     backend/models/csrnet.pth
+
+Install Git LFS before cloning. If this checkout contains a small pointer
+file instead of the model, run `git lfs install` and `git lfs pull` from the
+repository root.

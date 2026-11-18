@@ -1,201 +1,256 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VISORA — Crowd Intelligence</title>
-<link rel="stylesheet" href="style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1119">
+  <meta name="description" content="VISORA crowd intelligence and CSRNet video analysis dashboard">
+  <title>VISORA — Crowd Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14 5h-4l-2 3H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-4z"/><circle cx="12" cy="13" r="3"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-5 5"/></symbol>
+    <symbol id="i-heat" viewBox="0 0 24 24"><path d="M12 22c4.4 0 8-3.1 8-7 0-2.7-1.6-4.9-4-6.1.2 2.2-1.5 3.2-2 3.1C14 7 11 3.5 8 2c.5 4-4 7.3-4 12 0 4.4 3.6 8 8 8Z"/><path d="M12 22c-2.2 0-4-1.7-4-3.8 0-1.4.8-2.7 2-3.4.3 1.2 1.2 1.8 2 1.8.8 0 1.7-.7 2-1.8 1.2.7 2 2 2 3.4 0 2.1-1.8 3.8-4 3.8Z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.7a8 8 0 0 1-1.8 1l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.8-1l-1.7.7-1.4-2.4 1.4-1.1a7 7 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.7a8 8 0 0 1 1.8-1l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.8 1l1.7-.7 1.4 2.4-1.4 1.1a7 7 0 0 1 0 2Z" transform="translate(-1 -1) scale(1.08)"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+    <symbol id="i-trending" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m7 4 14 8-14 8z"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.5 9a7 7 0 0 1 11.6-2.6L20 12M4 12l2.9 5.6A7 7 0 0 0 18.5 15"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18.2A2 2 0 0 0 3.5 21h17a2 2 0 0 0 1.7-2.8L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4m0 4h.01"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m18 6-12 12M6 6l12 12"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  </svg>
 
-<div class="app">
-
-  <!-- ============ SIDEBAR ============ -->
-  <aside class="sidebar">
-    <div class="brand">
-      <span class="brand-mark" aria-hidden="true">V</span>
-      <span class="brand-text">VISORA<span class="brand-period">.</span></span>
-    </div>
-    <div class="sidebar-caption">WORKSPACE</div>
-    <nav class="nav">
-      <a href="#" class="nav-item active" data-section="dashboard">
-        <span class="nav-icon" aria-hidden="true">▦</span> Dashboard
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#dashboard" aria-label="VISORA dashboard">
+        <span class="brand-mark"><span>V</span><i></i></span>
+        <span class="brand-copy"><strong>VISORA<span>.</span></strong><small>INTELLIGENCE PLATFORM</small></span>
       </a>
-      <a href="#" class="nav-item" data-section="surveillance">
-        <span class="nav-icon" aria-hidden="true">◉</span> Live Surveillance
-      </a>
-      <a href="#" class="nav-item" data-section="analytics">
-        <span class="nav-icon" aria-hidden="true">⌁</span> Analytics
-      </a>
-      <a href="#" class="nav-item" data-section="alerts">
-        <span class="nav-icon" aria-hidden="true">△</span> Alerts
-      </a>
-      <a href="#" class="nav-item" data-section="settings">
-        <span class="nav-icon" aria-hidden="true">⚙︎</span> System Info
-      </a>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="model-chip">
-        <span class="dot dot-model"></span>
-        <span><strong>CSRNet Engine</strong><small>LOCAL INFERENCE</small></span>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ============ MAIN ============ -->
-  <main class="main">
-
-    <!-- HEADER -->
-    <header class="topbar" id="dashboard">
-      <div class="topbar-title">
-        <div class="eyebrow"><span class="eyebrow-line"></span> AI CROWD INTELLIGENCE</div>
-        <h1>See the crowd.<br><span>Understand the moment.</span></h1>
-        <p class="subtitle">Video-based crowd analysis, powered by CSRNet.</p>
-      </div>
-      <div class="topbar-right">
-        <div class="system-status" id="systemStatus">
-          <span class="dot dot-idle" id="statusDot"></span>
-          <span id="statusText">System Idle</span>
+      <button class="sidebar-toggle icon-button" id="sidebarToggle" type="button" aria-label="Collapse sidebar" title="Collapse sidebar">
+        <svg class="icon"><use href="#i-menu"/></svg>
+      </button>
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="nav">
+        <a class="nav-item active" href="#dashboard" data-section="dashboard" aria-current="page"><svg class="icon"><use href="#i-grid"/></svg><span>Overview</span></a>
+        <a class="nav-item" href="#surveillance" data-section="surveillance"><svg class="icon"><use href="#i-camera"/></svg><span>Surveillance</span></a>
+        <a class="nav-item" href="#analytics" data-section="analytics"><svg class="icon"><use href="#i-chart"/></svg><span>Analytics</span></a>
+        <a class="nav-item" href="#surveillance" data-section="densityAnalysis"><svg class="icon"><use href="#i-heat"/></svg><span>Density maps</span></a>
+        <a class="nav-item" href="#alerts" data-section="alerts"><svg class="icon"><use href="#i-bell"/></svg><span>Alerts</span><span class="nav-count" id="navAlertCount" hidden>0</span></a>
+        <a class="nav-item" href="#reports" data-section="reports"><svg class="icon"><use href="#i-file"/></svg><span>Reports</span></a>
+      </nav>
+      <div class="sidebar-label sidebar-label--system">SYSTEM</div>
+      <nav class="nav nav-secondary">
+        <a class="nav-item" href="#systemInfo" data-section="systemInfo"><svg class="icon"><use href="#i-settings"/></svg><span>System information</span></a>
+        <a class="nav-item" href="#systemInfo" data-section="settings"><svg class="icon"><use href="#i-settings"/></svg><span>Settings</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="engine-card">
+          <span class="engine-icon"><svg class="icon"><use href="#i-heat"/></svg></span>
+          <span class="engine-copy"><strong>CSRNet engine</strong><small><i class="status-dot" id="engineDot"></i><span id="engineStatus">CHECKING MODEL</span></small></span>
         </div>
-        <div class="datetime" id="datetime">--</div>
+        <div class="sidebar-footnote">LOCAL PROCESSING <span>·</span> v1.0</div>
       </div>
-    </header>
+    </aside>
 
-    <!-- STAT CARDS -->
-    <section class="stats-grid" id="statsGrid">
-      <div class="stat-card stat-card--current">
-        <div class="stat-card-top"><div class="stat-label">Current Crowd</div><span class="stat-index">01</span></div>
-        <div class="stat-value" id="statCurrent">0</div>
-        <div class="stat-unit">people detected</div>
-      </div>
-      <div class="stat-card stat-card--peak">
-        <div class="stat-card-top"><div class="stat-label">Peak Crowd</div><span class="stat-index">02</span></div>
-        <div class="stat-value" id="statPeak">0</div>
-        <div class="stat-unit">max observed</div>
-      </div>
-      <div class="stat-card stat-card--average">
-        <div class="stat-card-top"><div class="stat-label">Average Crowd</div><span class="stat-index">03</span></div>
-        <div class="stat-value" id="statAverage">0</div>
-        <div class="stat-unit">mean across frames</div>
-      </div>
-      <div class="stat-card stat-card--density">
-        <div class="stat-card-top"><div class="stat-label">Crowd Density</div><span class="stat-index">04</span></div>
-        <div class="stat-value stat-value--tag" id="statDensity">—</div>
-        <div class="stat-unit">threshold classification</div>
-      </div>
-      <div class="stat-card stat-card--safety">
-        <div class="stat-card-top"><div class="stat-label">Safety Status</div><span class="stat-index">05</span></div>
-        <div class="stat-value stat-value--tag" id="statSafety">—</div>
-        <div class="stat-unit">derived alert level</div>
-      </div>
-    </section>
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu icon-button" id="mobileMenu" type="button" aria-label="Open navigation"><svg class="icon"><use href="#i-menu"/></svg></button>
+          <div class="breadcrumb"><span>Workspace</span><svg class="icon"><use href="#i-chevron"/></svg><strong id="pageTitle">Overview</strong></div>
+        </div>
+        <div class="topbar-actions">
+          <div class="system-status" id="systemStatus"><span class="status-dot" id="statusDot"></span><span id="statusText">Connecting</span></div>
+          <span class="topbar-divider"></span>
+          <time class="datetime" id="datetime">—</time>
+          <button class="icon-button notification-button" id="notificationButton" type="button" aria-label="Jump to alerts"><svg class="icon"><use href="#i-bell"/></svg><span class="notification-dot" id="notificationDot" hidden></span></button>
+          <details class="profile-menu">
+            <summary aria-label="Local workspace menu"><span class="avatar">V</span><span class="profile-copy"><strong>Local workspace</strong><small>On-device session</small></span><svg class="icon"><use href="#i-chevron"/></svg></summary>
+            <div class="profile-dropdown"><strong>Private by design</strong><p>Videos are processed by your local Flask service.</p><span>CSRNet · local inference</span></div>
+          </details>
+        </div>
+      </header>
 
-    <div class="grid-2col">
+      <section class="page-intro" id="dashboard">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-pulse"></span> CROWD INTELLIGENCE <span class="eyebrow-separator">/</span> LOCAL ANALYSIS</div>
+          <h1>See the crowd.<br><span>Understand the moment.</span></h1>
+          <p>Upload surveillance footage for an AI-powered density analysis, processed locally with CSRNet.</p>
+        </div>
+        <div class="intro-meta">
+          <span class="meta-icon"><svg class="icon"><use href="#i-clock"/></svg></span>
+          <span><small>ANALYSIS MODE</small><strong>Video on demand</strong></span>
+        </div>
+      </section>
 
-      <!-- LEFT COLUMN -->
-      <div class="col">
+      <section class="stats-grid" aria-label="Current analysis metrics">
+        <article class="stat-card stat-card--cyan">
+          <div class="stat-card-heading"><span class="stat-icon"><svg class="icon"><use href="#i-people"/></svg></span><span class="stat-trend" id="currentTrend">LIVE RESULT</span></div>
+          <p class="stat-label">Current crowd</p><div class="stat-value" id="statCurrent">—</div><p class="stat-caption">people · latest sampled frame</p>
+        </article>
+        <article class="stat-card stat-card--blue">
+          <div class="stat-card-heading"><span class="stat-icon"><svg class="icon"><use href="#i-trending"/></svg></span><span class="stat-trend">SESSION MAX</span></div>
+          <p class="stat-label">Peak crowd</p><div class="stat-value" id="statPeak">—</div><p class="stat-caption">people · analyzed video</p>
+        </article>
+        <article class="stat-card stat-card--violet">
+          <div class="stat-card-heading"><span class="stat-icon"><svg class="icon"><use href="#i-chart"/></svg></span><span class="stat-trend">SESSION MEAN</span></div>
+          <p class="stat-label">Average crowd</p><div class="stat-value" id="statAverage">—</div><p class="stat-caption">people · sampled frames</p>
+        </article>
+        <article class="stat-card stat-card--amber">
+          <div class="stat-card-heading"><span class="stat-icon"><svg class="icon"><use href="#i-heat"/></svg></span><span class="stat-trend">CSRNET OUTPUT</span></div>
+          <div class="stat-value stat-value--tag" id="statDensity">AWAITING</div><p class="stat-label stat-label--bottom">Crowd density</p><p class="stat-caption">threshold classification</p>
+        </article>
+        <article class="stat-card stat-card--green">
+          <div class="stat-card-heading"><span class="stat-icon"><svg class="icon"><use href="#i-shield"/></svg></span><span class="stat-trend">ASSESSMENT</span></div>
+          <div class="stat-value stat-value--tag" id="statSafety">PENDING</div><p class="stat-label stat-label--bottom">Safety status</p><p class="stat-caption">derived from density level</p>
+        </article>
+      </section>
 
-        <!-- UPLOAD / SURVEILLANCE FEED -->
-        <section class="panel" id="surveillance">
-          <div class="panel-header">
-            <div><div class="panel-kicker">01 / INPUT</div><h2>Surveillance Feed</h2></div>
-            <span class="panel-tag" id="processingStatusTag">No video loaded</span>
-          </div>
-
-          <div class="upload-zone" id="uploadZone">
-            <input
-              type="file"
-              id="videoInput"
-              accept="video/mp4,video/x-msvideo,video/quicktime,video/x-matroska,video/webm"
-              hidden
-            >
-            <label for="videoInput" id="uploadPrompt" class="upload-prompt">
-              <span class="upload-icon" aria-hidden="true">↑</span>
-              <p class="upload-title">Choose a video to begin</p>
-              <p class="upload-action">or <span>browse files</span></p>
-              <p class="upload-hint">
-                MP4, AVI, MOV, MKV, WEBM — up to 200MB
-              </p>
-            </label>
-            <video id="videoPreview" class="video-preview" controls hidden></video>
-          </div>
-
-          <div class="file-meta" id="fileMeta" hidden>
-            <span id="fileName">—</span>
-          </div>
-
-          <div class="controls">
-            <button id="startBtn" class="btn btn-primary" disabled>▶ Start Analysis</button>
-            <button id="resetBtn" class="btn btn-ghost">■ Reset</button>
-          </div>
-
-          <div class="progress-wrap" id="progressWrap" hidden>
-            <div class="progress-label">
-              <span id="progressLabel">Processing frames…</span>
-              <span id="progressPct">0%</span>
+      <section class="section-block" id="surveillance">
+        <div class="section-heading">
+          <div><span class="section-index">01</span><div><h2>Surveillance analysis</h2><p>Review source footage and run a CSRNet inference pass.</p></div></div>
+          <span class="section-badge"><span class="status-dot status-dot--muted"></span> ON-DEMAND</span>
+        </div>
+        <div class="surveillance-grid">
+          <article class="panel video-panel">
+            <div class="panel-heading">
+              <div><span class="panel-overline">VIDEO INPUT</span><h3>Analysis workspace</h3></div>
+              <span class="analysis-tag" id="processingStatusTag">No video selected</span>
             </div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="progressFill"></div>
+            <div class="video-stage is-empty" id="uploadZone">
+              <input type="file" id="videoInput" accept=".mp4,.avi,.mov,.mkv,.webm,video/mp4,video/x-msvideo,video/quicktime,video/x-matroska,video/webm" hidden>
+              <div class="video-empty" id="uploadPrompt">
+                <span class="upload-mark"><svg class="icon"><use href="#i-upload"/></svg></span>
+                <strong>Drop a video file to get started</strong>
+                <span>or <button id="chooseVideoBtn" class="browse-link" type="button">browse your device</button></span>
+                <small>MP4 · AVI · MOV · MKV · WEBM <i>—</i> MAX 200 MB</small>
+              </div>
+              <video id="videoPreview" class="video-preview" controls playsinline preload="metadata" hidden></video>
+              <img id="densityMapImg" class="density-map-img" alt="CSRNet-generated crowd density map" hidden>
+              <div class="density-empty-state" id="densityEmptyState" hidden><span class="empty-visual-icon"><svg class="icon"><use href="#i-heat"/></svg></span><strong>Density map unavailable</strong><span>Run an analysis to generate the CSRNet visualization.</span></div>
+              <div class="stage-watermark" id="stageWatermark" hidden><span class="watermark-dot"></span> CSRNET DENSITY MAP</div>
+              <div class="stage-corner stage-corner--tl"></div><div class="stage-corner stage-corner--br"></div>
             </div>
+            <div class="file-meta" id="fileMeta" hidden><span class="file-meta-icon"><svg class="icon"><use href="#i-file"/></svg></span><span class="file-meta-copy"><strong id="fileName">—</strong><small id="fileDetails">—</small></span><span class="file-ready"><svg class="icon"><use href="#i-check"/></svg> READY</span></div>
+            <div class="video-toolbar">
+              <div class="view-switch" role="group" aria-label="Visualization view">
+                <button class="view-option active" type="button" data-view="source" aria-pressed="true">Source video</button>
+                <button class="view-option" type="button" data-view="density" aria-pressed="false">Density map</button>
+              </div>
+              <span class="view-note" id="viewNote">SOURCE FOOTAGE</span>
+            </div>
+            <div class="analysis-controls">
+              <button id="startBtn" class="button button-primary" type="button" disabled><svg class="icon"><use href="#i-play"/></svg><span>Upload &amp; analyze</span></button>
+              <button id="stopBtn" class="button button-danger" type="button" hidden><svg class="icon"><use href="#i-stop"/></svg><span>Stop analysis</span></button>
+              <button id="resetBtn" class="button button-secondary" type="button"><svg class="icon"><use href="#i-refresh"/></svg><span>Reset</span></button>
+              <span class="control-spacer"></span><span class="model-mini"><i class="status-dot"></i> CSRNet</span>
+            </div>
+            <div class="progress-wrap" id="progressWrap" hidden>
+              <div class="progress-copy"><span id="progressLabel">Preparing analysis…</span><strong id="progressPct">0%</strong></div>
+              <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+          </article>
+
+          <aside class="panel visualization-panel" id="densityAnalysis">
+            <div class="panel-heading">
+              <div><span class="panel-overline">COMPUTER VISION</span><h3>Density intelligence</h3></div>
+              <span class="model-chip"><i class="status-dot"></i> CSRNet</span>
+            </div>
+            <div class="visual-summary">
+              <div><span>ESTIMATED PEOPLE</span><strong id="visualCount">—</strong></div>
+              <span class="density-pill" id="visualDensity">NO RESULT</span>
+            </div>
+            <div class="density-legend">
+              <span>LOW</span><i class="legend-gradient"></i><span>HIGH</span>
+            </div>
+            <p class="visual-note">Heatmap is generated from the latest sampled frame. Color intensity indicates model density response; estimates are not ground-truth counts.</p>
+            <div class="visual-divider"></div>
+            <div class="classification-list">
+              <div><i class="class-dot class-dot--low"></i><span>Low</span><small>Normal concentration</small></div>
+              <div><i class="class-dot class-dot--medium"></i><span>Medium</span><small>Increased concentration</small></div>
+              <div><i class="class-dot class-dot--high"></i><span>High</span><small>Potential overcrowding</small></div>
+              <div><i class="class-dot class-dot--critical"></i><span>Critical</span><small>Above configured threshold</small></div>
+            </div>
+            <div class="visual-footer"><span class="visual-footer-icon"><svg class="icon"><use href="#i-shield"/></svg></span><span>CSRNet density estimation <strong>Not a life-safety system</strong></span></div>
+          </aside>
+        </div>
+      </section>
+
+      <div class="content-grid">
+        <section class="panel analytics-panel" id="analytics">
+          <div class="panel-heading panel-heading--spaced">
+            <div><span class="panel-overline">VIDEO TIMELINE</span><h3>Population over time</h3><p class="panel-subtitle">CSRNet estimates across sampled frames</p></div>
+            <label class="filter-control"><svg class="icon"><use href="#i-calendar"/></svg><select id="timeFilter" aria-label="Select analysis time range"><option value="1h">Last 1 hour</option><option value="24h">Last 24 hours</option><option value="7d">Last 7 days</option><option value="custom">Custom range</option></select></label>
+          </div>
+          <div class="chart-summary"><span><i class="chart-key chart-key--count"></i>Frame estimate</span><span><i class="chart-key chart-key--average"></i>Analysis average</span><span class="chart-context" id="chartContext">No analysis data</span></div>
+          <div class="chart-wrap"><canvas id="crowdChart" height="230" aria-label="Crowd count per sampled video frame"></canvas><div class="chart-tooltip" id="chartTooltip" role="status" hidden></div></div>
+          <div class="custom-range" id="customRange" hidden><label>From (min)<input id="rangeStart" type="number" min="0" step="1" value="0"></label><label>To (min)<input id="rangeEnd" type="number" min="0" step="1" placeholder="Video duration"></label><button class="button button-secondary" id="applyRange" type="button">Apply</button></div>
+          <p class="chart-footnote" id="chartFootnote">Run an analysis to view real frame estimates. Historical video records are not stored by the backend.</p>
+        </section>
+
+        <section class="panel alerts-panel" id="alerts">
+          <div class="panel-heading panel-heading--spaced">
+            <div><span class="panel-overline">EVENT MONITOR</span><h3>Density alerts</h3><p class="panel-subtitle">Transitions detected in this analysis</p></div>
+            <span class="alert-counter" id="alertCounter">0 EVENTS</span>
+          </div>
+          <ul class="alerts-list" id="alertsList"><li class="alert-empty"><span class="empty-mark"><svg class="icon"><use href="#i-bell"/></svg></span><strong>No alerts to display</strong><span>Alert events will appear here after analysis.</span></li></ul>
+        </section>
+      </div>
+
+      <div class="content-grid content-grid--secondary">
+        <section class="panel monitoring-panel" id="monitoringInfo">
+          <div class="panel-heading panel-heading--spaced"><div><span class="panel-overline">SESSION DETAILS</span><h3>Monitoring information</h3></div><span class="session-label">CURRENT SESSION</span></div>
+          <div class="info-grid">
+            <div class="info-item"><span>Video name</span><strong id="infoVideoName">—</strong></div>
+            <div class="info-item"><span>Video duration</span><strong id="infoDuration">—</strong></div>
+            <div class="info-item"><span>Total frames</span><strong id="infoTotalFrames">—</strong></div>
+            <div class="info-item"><span>Processed frames</span><strong id="infoFrames">—</strong></div>
+            <div class="info-item"><span>Processing speed</span><strong id="infoFps">—</strong></div>
+            <div class="info-item"><span>Model used</span><strong id="infoModel">CSRNet</strong></div>
+            <div class="info-item"><span>Analysis status</span><strong id="infoStatus"><i class="status-dot status-dot--muted"></i> IDLE</strong></div>
+            <div class="info-item"><span>Last analysis</span><strong id="infoTimestamp">—</strong></div>
           </div>
         </section>
 
-        <!-- MONITORING INFO -->
-        <section class="panel" id="settings">
-          <div class="panel-header"><div><div class="panel-kicker">02 / SESSION</div><h2>Monitoring Information</h2></div></div>
-          <table class="info-table">
-            <tbody>
-              <tr><td>Video Name</td><td id="infoVideoName">—</td></tr>
-              <tr><td>Video Duration</td><td id="infoDuration">—</td></tr>
-              <tr><td>Frames Processed</td><td id="infoFrames">—</td></tr>
-              <tr><td>Processing FPS</td><td id="infoFps">—</td></tr>
-              <tr><td>Model Used</td><td id="infoModel">CSRNet</td></tr>
-              <tr><td>Analysis Status</td><td id="infoStatus">Idle</td></tr>
-            </tbody>
-          </table>
-        </section>
-
-      </div>
-
-      <!-- RIGHT COLUMN -->
-      <div class="col">
-
-        <!-- CSRNET ANALYSIS -->
-        <section class="panel" id="densityAnalysis">
-          <div class="panel-header"><div><div class="panel-kicker">03 / COMPUTER VISION</div><h2>Density Map</h2></div><span class="panel-indicator"><span class="dot dot-model"></span> CSRNet</span></div>
-          <div class="density-view">
-            <img id="densityMapImg" class="density-map-img" alt="Density map" hidden>
-            <div id="densityPlaceholder" class="density-placeholder">
-              <span class="density-placeholder-icon" aria-hidden="true">⌁</span>
-              <strong>Waiting for analysis</strong>
-              <span>Your crowd density visualization will appear here.</span>
-            </div>
+        <section class="panel system-panel" id="systemInfo">
+          <div class="panel-heading panel-heading--spaced"><div><span class="panel-overline">LOCAL SERVICE</span><h3>System health</h3></div><span class="health-indicator" id="healthBadge"><i class="status-dot status-dot--muted"></i> CHECKING</span></div>
+          <div class="health-list">
+            <div><span class="health-icon"><svg class="icon"><use href="#i-grid"/></svg></span><span><strong>Flask backend</strong><small>Local API connection</small></span><b id="backendHealth" class="health-state">Checking</b></div>
+            <div><span class="health-icon"><svg class="icon"><use href="#i-heat"/></svg></span><span><strong>CSRNet model</strong><small id="modelDevice">Model availability</small></span><b id="modelHealth" class="health-state">Checking</b></div>
+            <div><span class="health-icon"><svg class="icon"><use href="#i-camera"/></svg></span><span><strong>Analysis process</strong><small>Current request status</small></span><b id="processHealth" class="health-state">Idle</b></div>
           </div>
+          <p class="system-footnote">Video inference runs on this machine. A missing checkpoint prevents analysis but does not stop the dashboard.</p>
         </section>
-
-        <!-- ANALYTICS CHART -->
-        <section class="panel" id="analytics">
-          <div class="panel-header"><div><div class="panel-kicker">04 / TRENDS</div><h2>Population over time</h2></div></div>
-          <canvas id="crowdChart" height="220"></canvas>
-        </section>
-
-        <!-- ALERTS -->
-        <section class="panel" id="alerts">
-          <div class="panel-header"><div><div class="panel-kicker">05 / MONITORING</div><h2>Density alerts</h2></div></div>
-          <ul class="alerts-list" id="alertsList">
-            <li class="alert-empty">No alerts yet. Run an analysis to populate this feed.</li>
-          </ul>
-        </section>
-
       </div>
-    </div>
 
-  </main>
-</div>
+      <section class="panel reports-panel" id="reports">
+        <div class="panel-heading panel-heading--spaced">
+          <div><span class="panel-overline">EXPORT &amp; HISTORY</span><h3>Analysis reports</h3><p class="panel-subtitle">Export actual results from the current analysis session.</p></div>
+          <div class="report-actions"><button class="button button-secondary" id="exportCsvBtn" type="button" disabled><svg class="icon"><use href="#i-download"/></svg> Export CSV</button><button class="button button-secondary" id="exportPdfBtn" type="button" disabled><svg class="icon"><use href="#i-file"/></svg> Save PDF</button></div>
+        </div>
+        <div class="history-wrap"><div class="history-head"><span>VIDEO / ANALYSIS</span><span>PEAK COUNT</span><span>DENSITY</span><span>STATUS</span><span>ANALYZED</span></div><div id="historyList" class="history-list"><div class="history-empty">Completed analysis records will appear here. Past sessions are not persisted by the backend.</div></div></div>
+      </section>
 
-<script src="script.js"></script>
+      <footer class="page-footer"><span>VISORA <i>·</i> LOCAL CROWD INTELLIGENCE</span><span>CSRNet estimates are informational and not certified safety guidance.</span></footer>
+    </main>
+  </div>
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  <script src="script.js"></script>
 </body>
 </html>

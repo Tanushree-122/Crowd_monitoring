@@ -6,6 +6,7 @@ Endpoints:
     POST /api/analyze  - run CSRNet analysis
     GET  /api/status   - get analysis status
     POST /api/reset   - reset analysis state
+    POST /api/stop    - request cancellation between frames
     GET  /api/health  - health check
 """
 
@@ -20,20 +21,7 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
 import config
-from inference import process_video, load_model, ModelLoadError
-from crowd_analyzer import analyze_counts
-import os
-import logging
-import traceback
-import threading
-import uuid
-
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
-from werkzeug.utils import secure_filename
-
-import config
-from inference import process_video, load_model, ModelLoadError
+from inference import process_video, load_model, ModelLoadError, AnalysisCancelledError
 from crowd_analyzer import analyze_counts
 
 logging.basicConfig(level=logging.INFO)
@@ -56,8 +44,9 @@ app.config["UPLOAD_FOLDER"] = config.UPLOAD_FOLDER
 # a production system would use a proper job queue (Celery/RQ) + database.
 # ---------------------------------------------------------------------------
 _STATE_LOCK = threading.Lock()
+_CANCEL_EVENT = threading.Event()
 _STATE = {
-    "status": "IDLE",           # IDLE | PROCESSING | DONE | ERROR
+    "status": "IDLE",           # IDLE | PROCESSING | DONE | ERROR | CANCELLED
     "progress": 0,               # frames processed so far
     "video_name": None,
     "error": None,
@@ -161,7 +150,11 @@ def _run_analysis(video_path: str, video_name: str):
             _STATE["video_name"] = video_name
             _STATE["error"] = None
 
-        video_result = process_video(video_path, progress_callback=progress_cb)
+        video_result = process_video(
+            video_path,
+            progress_callback=progress_cb,
+            cancel_event=_CANCEL_EVENT,
+        )
         analytics = analyze_counts(video_result["frame_counts"])
 
         full_result = {
@@ -174,12 +167,22 @@ def _run_analysis(video_path: str, video_name: str):
             "density_map_path": video_result["density_map_path"],
             "video_name": video_name,
             "model_used": "CSRNet",
+            "frame_sample_interval": config.FRAME_SAMPLE_INTERVAL,
         }
 
         with _STATE_LOCK:
+            if _CANCEL_EVENT.is_set():
+                _STATE["status"] = "CANCELLED"
+                _STATE["error"] = "Analysis was stopped by the user."
+                return
             _STATE["status"] = "DONE"
             _STATE["result"] = full_result
 
+    except AnalysisCancelledError as exc:
+        logger.info("Analysis cancelled: %s", exc)
+        with _STATE_LOCK:
+            _STATE["status"] = "CANCELLED"
+            _STATE["error"] = str(exc)
     except (ModelLoadError, FileNotFoundError, IOError, ValueError) as exc:
         logger.error("Analysis failed: %s", exc)
         with _STATE_LOCK:
@@ -250,6 +253,7 @@ def analyze():
                 "error": "An analysis is already in progress. "
                          "Call /api/reset or wait for it to finish."
             }), 409
+        _CANCEL_EVENT.clear()
 
     # Run synchronously so the HTTP response directly contains the real
     # CSRNet-derived results (simplest, most robust approach for a local
@@ -257,6 +261,8 @@ def analyze():
     _run_analysis(video_path, video_name)
 
     with _STATE_LOCK:
+        if _STATE["status"] == "CANCELLED":
+            return jsonify({"error": _STATE["error"], "status": "CANCELLED"}), 409
         if _STATE["status"] == "ERROR":
             return jsonify({"error": _STATE["error"]}), 500
         result = _STATE["result"]
@@ -281,6 +287,16 @@ def reset():
     """Clears server-side analysis state so the dashboard can start fresh."""
     _reset_state()
     return jsonify({"message": "State reset successfully."})
+
+
+@app.route("/api/stop", methods=["POST"])
+def stop():
+    """Request cancellation between frames in the active CSRNet analysis."""
+    with _STATE_LOCK:
+        if _STATE["status"] != "PROCESSING":
+            return jsonify({"error": "No analysis is currently in progress."}), 409
+        _CANCEL_EVENT.set()
+    return jsonify({"message": "Analysis stop requested."}), 202
 
 
 @app.route("/outputs/density_maps/<path:filename>")
